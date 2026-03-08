@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BarleyMark Research Companion — Coming Soon</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F6F3ED;
+    --bg-deep: #EFEAE1;
+    --surface: #FFFFFF;
+    --surface-2: #F0EDE6;
+    --surface-3: #E6E2DA;
+    --border: #DDD8CE;
+    --border-light: #C9C4B8;
+    --text: #1E1E1C;
+    --text-secondary: #4A4843;
+    --text-muted: #7D7A73;
+    --text-dim: #A8A49C;
+    --purple: #6C5CE7;
+    --purple-light: #8577ED;
+    --purple-surface: rgba(108, 92, 231, 0.06);
+    --purple-surface-strong: rgba(108, 92, 231, 0.1);
+    --teal: #00B894;
+    --teal-light: #2BCDA7;
+    --teal-surface: rgba(0, 184, 148, 0.06);
+    --teal-surface-strong: rgba(0, 184, 148, 0.1);
+    --green: #00B894;
+    --green-surface: rgba(0, 184, 148, 0.08);
+    --gold-warm: #C9A84C;
+    --gold-surface: rgba(201, 168, 76, 0.08);
+    --red-soft: #D4736C;
+    --red-surface: rgba(212, 115, 108, 0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.022;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ═══════════ NAV ═══════════ */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 0 40px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(246, 243, 237, 0.82);
+    backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(221, 216, 206, 0.6);
+  }
+
+  .nav-logo { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+
+  .logo-mark {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 10px rgba(108, 92, 231, 0.15), 0 1px 3px rgba(0,0,0,0.06);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .logo-mark:hover { transform: scale(1.04); box-shadow: 0 4px 16px rgba(108, 92, 231, 0.2); }
+  .logo-mark span { font-family: 'DM Sans', sans-serif; font-size: 0.9em; font-weight: 700; color: white; letter-spacing: -0.5px; line-height: 1; }
+
+  .nav-wordmark { font-family: 'DM Serif Display', serif; font-size: 1.1em; color: var(--text); letter-spacing: -0.3px; }
+
+  .nav-status { display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.7em; color: var(--text-dim); letter-spacing: 0.5px; }
+
+  .nav-status .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: pulse 2.2s ease-in-out infinite; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.25); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 6px transparent; }
+  }
+
+  /* ═══════════ HERO ═══════════ */
+  .hero {
+    position: relative; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 120px 40px 80px; text-align: center; overflow: hidden;
+  }
+
+  .hero::before {
+    content: ''; position: absolute; top: -180px; left: 50%; transform: translateX(-50%);
+    width: 900px; height: 900px;
+    background: radial-gradient(ellipse at center, rgba(108, 92, 231, 0.04) 0%, rgba(0, 184, 148, 0.02) 35%, transparent 60%);
+    pointer-events: none; animation: glowBreathe 10s ease-in-out infinite;
+  }
+
+  @keyframes glowBreathe {
+    0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+    50% { opacity: 0.6; transform: translateX(-50%) scale(1.06); }
+  }
+
+  .dot-grid { position: absolute; inset: 0; overflow: hidden; pointer-events: none; opacity: 0.12; }
+  .dot-grid::before { content: ''; position: absolute; inset: -20%; background-image: radial-gradient(circle, var(--border-light) 1px, transparent 1px); background-size: 48px 48px; }
+
+  .hero-content { position: relative; z-index: 2; max-width: 620px; }
+
+  .hero-logo {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 72px; height: 72px; border-radius: 18px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    margin-bottom: 32px;
+    box-shadow: 0 8px 32px rgba(108, 92, 231, 0.18), 0 2px 8px rgba(0,0,0,0.06);
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-logo span { font-family: 'DM Sans', sans-serif; font-size: 1.8em; font-weight: 700; color: white; letter-spacing: -1px; line-height: 1; }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 100px;
+    padding: 7px 18px 7px 12px; font-size: 0.8em; font-weight: 500; color: var(--text-muted);
+    margin-bottom: 28px; animation: fadeUp 0.6s 0.08s ease both;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); animation: pulse 2.2s ease-in-out infinite; }
+
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4em, 5.5vw, 3.8em); font-weight: 400;
+    letter-spacing: -1.2px; line-height: 1.1; margin-bottom: 20px;
+    animation: fadeUp 0.6s 0.14s ease both; color: var(--text);
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.06em; color: var(--text-muted); max-width: 470px;
+    margin: 0 auto 40px; font-weight: 400; line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ═══════════ EMAIL FORM ═══════════ */
+  .email-form {
+    display: flex; max-width: 440px; margin: 0 auto 16px;
+    animation: fadeUp 0.6s 0.28s ease both; border-radius: 13px; overflow: hidden;
+    border: 1.5px solid var(--border); background: var(--surface);
+    transition: border-color 0.3s, box-shadow 0.3s; box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+
+  .email-form:focus-within { border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-surface), 0 8px 32px rgba(0,0,0,0.06); }
+
+  .email-form input {
+    flex: 1; padding: 15px 18px; background: transparent; border: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.92em; outline: none; min-width: 0;
+  }
+
+  .email-form input::placeholder { color: var(--text-dim); }
+
+  .email-form button {
+    padding: 15px 26px; background: linear-gradient(135deg, var(--purple), var(--teal));
+    color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.88em;
+    font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap;
+  }
+
+  .email-form button:hover { filter: brightness(1.08); box-shadow: inset 0 0 24px rgba(255,255,255,0.1); }
+
+  .email-hint { font-size: 0.76em; color: var(--text-dim); animation: fadeUp 0.6s 0.32s ease both; margin-bottom: 64px; }
+
+  .email-form.success { border-color: var(--teal); box-shadow: 0 0 0 3px var(--teal-surface); }
+  .email-form.success button { background: var(--teal); }
+
+  /* ═══════════ DEMO WIDGET ═══════════ */
+  .demo-section { position: relative; z-index: 2; max-width: 540px; width: 100%; animation: fadeUp 0.6s 0.45s ease both; }
+
+  .demo-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.02);
+  }
+
+  .demo-header { padding: 12px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: var(--surface-2); }
+  .window-dots { display: flex; gap: 5px; }
+  .window-dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
+  .window-title { font-family: 'JetBrains Mono', monospace; font-size: 0.66em; color: var(--text-dim); margin-left: 6px; }
+  .demo-body { padding: 20px; }
+  .demo-label { font-family: 'JetBrains Mono', monospace; font-size: 0.58em; font-weight: 600; text-transform: uppercase; letter-spacing: 1.8px; color: var(--text-dim); margin-bottom: 14px; }
+
+  .source-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 14px; border-radius: 9px; background: var(--surface-2);
+    margin-bottom: 7px; border: 1px solid transparent;
+    opacity: 0; transform: translateX(-12px); transition: border-color 0.2s;
+  }
+
+  .source-row:hover { border-color: var(--border); }
+  .source-row.visible { animation: slideInRow 0.45s ease forwards; }
+
+  @keyframes slideInRow { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+
+  .source-name { font-weight: 600; font-size: 0.82em; color: var(--text); }
+  .source-domain { font-family: 'JetBrains Mono', monospace; font-size: 0.64em; color: var(--text-dim); margin-top: 1px; }
+
+  .trust-score { font-family: 'JetBrains Mono', monospace; font-weight: 600; font-size: 0.76em; padding: 4px 12px; border-radius: 6px; min-width: 40px; text-align: center; }
+  .trust-high { background: var(--teal-surface-strong); color: var(--teal); }
+  .trust-med { background: var(--gold-surface); color: var(--gold-warm); }
+  .trust-low { background: var(--red-surface); color: var(--red-soft); }
+
+  .score-counting { animation: countPulse 0.3s ease; }
+  @keyframes countPulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+  .verdict-bar {
+    margin-top: 14px; padding: 12px 16px; background: var(--purple-surface);
+    border: 1px solid rgba(108, 92, 231, 0.08); border-radius: 9px;
+    display: flex; align-items: center; justify-content: space-between;
+    opacity: 0; transform: translateY(8px); transition: all 0.5s ease;
+  }
+
+  .verdict-bar.visible { opacity: 1; transform: translateY(0); }
+  .verdict-label-text { font-family: 'JetBrains Mono', monospace; font-size: 0.6em; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); }
+  .verdict-value { font-family: 'DM Serif Display', serif; font-size: 0.88em; font-style: italic; background: linear-gradient(135deg, var(--purple), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  /* ═══════════ DIVIDER ═══════════ */
+  .glow-divider { height: 1px; max-width: 600px; margin: 0 auto; background: linear-gradient(90deg, transparent, var(--border-light), transparent); }
+
+  /* ═══════════ AGENTS SECTION ═══════════ */
+  .agents-section { padding: 80px 40px; }
+
+  .agents-inner { max-width: 720px; margin: 0 auto; text-align: center; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.62em; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 2.5px;
+    background: linear-gradient(135deg, var(--purple), var(--teal));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  .section-title { font-family: 'DM Serif Display', serif; font-size: clamp(1.5em, 3vw, 2em); font-weight: 400; letter-spacing: -0.5px; margin-bottom: 12px; line-height: 1.2; }
+  .section-desc { color: var(--text-muted); font-size: 0.94em; max-width: 480px; margin: 0 auto 44px; line-height: 1.7; }
+
+  .agents-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 20px; }
+
+  .agent-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 26px 22px; text-align: left; transition: all 0.3s; position: relative; overflow: hidden;
+  }
+
+  .agent-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.3s; }
+  .agent-card:hover::before { opacity: 1; }
+  .agent-card:hover { border-color: var(--border-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.05); }
+  .agent-card.purple-accent::before { background: linear-gradient(90deg, var(--purple), var(--purple-light)); }
+  .agent-card.teal-accent::before { background: linear-gradient(90deg, var(--teal), var(--teal-light)); }
+
+  .agent-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.15em; margin-bottom: 14px; }
+  .agent-icon.purple-bg { background: var(--purple-surface-strong); }
+  .agent-icon.teal-bg { background: var(--teal-surface-strong); }
+
+  .agent-card h3 { font-family: 'DM Serif Display', serif; font-size: 1em; font-weight: 400; margin-bottom: 6px; }
+  .agent-card p { color: var(--text-muted); font-size: 0.82em; line-height: 1.6; }
+
+  .agent-card.coming-soon { border-style: dashed; background: var(--surface-2); }
+  .agent-card.coming-soon .agent-icon { background: var(--surface-3); }
+  .agent-card.coming-soon h3 { color: var(--text-muted); }
+  .agent-card.coming-soon p { color: var(--text-dim); }
+
+  .coming-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.58em; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+    background: var(--surface-3); padding: 3px 8px; border-radius: 4px;
+    margin-left: 8px; vertical-align: middle;
+  }
+
+  .more-agents-note { font-size: 0.84em; color: var(--text-muted); font-style: italic; margin-top: 8px; }
+
+  /* ═══════════ PRODUCT NAME ═══════════ */
+  .name-section { padding: 60px 40px; text-align: center; }
+
+  .full-product-name { font-family: 'DM Serif Display', serif; font-size: clamp(1.4em, 3vw, 1.9em); font-weight: 400; letter-spacing: -0.5px; color: var(--text); margin-bottom: 8px; }
+  .name-tagline { color: var(--text-muted); font-size: 0.92em; line-height: 1.65; max-width: 420px; margin: 0 auto; }
+
+  /* ═══════════ BOTTOM CTA ═══════════ */
+  .bottom-cta { padding: 60px 40px 80px; text-align: center; position: relative; }
+
+  .bottom-cta::before {
+    content: ''; position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    width: 500px; height: 350px;
+    background: radial-gradient(ellipse, rgba(108, 92, 231, 0.03) 0%, rgba(0, 184, 148, 0.02) 30%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .bottom-cta h2 { font-family: 'DM Serif Display', serif; font-size: 1.5em; font-weight: 400; letter-spacing: -0.5px; margin-bottom: 10px; }
+  .bottom-cta p { color: var(--text-muted); font-size: 0.9em; margin-bottom: 28px; }
+
+  .bottom-email-form {
+    display: flex; max-width: 400px; margin: 0 auto; border-radius: 12px; overflow: hidden;
+    border: 1.5px solid var(--border); background: var(--surface);
+    transition: border-color 0.3s, box-shadow 0.3s; box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+
+  .bottom-email-form:focus-within { border-color: var(--purple); box-shadow: 0 0 0 3px var(--purple-surface); }
+
+  .bottom-email-form input {
+    flex: 1; padding: 13px 16px; background: transparent; border: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88em; outline: none; min-width: 0;
+  }
+
+  .bottom-email-form input::placeholder { color: var(--text-dim); }
+
+  .bottom-email-form button {
+    padding: 13px 22px; background: linear-gradient(135deg, var(--purple), var(--teal));
+    color: white; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.84em;
+    font-weight: 700; cursor: pointer; transition: all 0.3s; white-space: nowrap;
+  }
+
+  .bottom-email-form button:hover { filter: brightness(1.08); }
+
+  /* ═══════════ FOOTER ═══════════ */
+  footer {
+    padding: 32px 40px; border-top: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 720px; margin: 0 auto;
+  }
+
+  .footer-left { display: flex; align-items: center; gap: 8px; }
+  .footer-mark { width: 20px; height: 20px; border-radius: 5px; background: linear-gradient(135deg, var(--purple), var(--teal)); }
+  .footer-left span { font-family: 'DM Serif Display', serif; font-size: 0.88em; color: var(--text-muted); }
+  .footer-right { color: var(--text-dim); font-size: 0.74em; }
+
+  /* ═══════════ SCROLL REVEAL ═══════════ */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.55s ease, transform 0.55s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ═══════════ RESPONSIVE ═══════════ */
+  @media (max-width: 700px) {
+    .hero { padding: 120px 20px 60px; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .email-form, .bottom-email-form { flex-direction: column; border-radius: 12px; }
+    .email-form input, .bottom-email-form input { text-align: center; }
+    nav { padding: 0 20px; }
+    footer { flex-direction: column; gap: 10px; text-align: center; }
+    .agents-section, .name-section, .bottom-cta { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-mark"><span>bm</span></div>
+    <span class="nav-wordmark">BarleyMark</span>
+  </a>
+  <div class="nav-status">
+    <span class="pulse"></span>
+    In Development
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="dot-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-logo"><span>bm</span></div>
+
+    <div class="badge">
+      <span class="dot"></span>
+      Coming Soon
+    </div>
+
+    <h1>AI research that<br><span class="gradient-text">critiques itself.</span></h1>
+
+    <p class="hero-sub">
+      Modular research agents that investigate, score source trust, expose blind spots, and tell you exactly what you don't know.
+    </p>
+
+    <form class="email-form" id="heroForm" onsubmit="handleSignup(event, this)">
+      <input type="email" placeholder="you@email.com" required autocomplete="email" />
+      <button type="submit">Get Early Access</button>
+    </form>
+    <div class="email-hint">Join the waitlist. No spam, just launch updates.</div>
+  </div>
+
+  <div class="demo-section">
+    <div class="demo-card">
+      <div class="demo-header">
+        <div class="window-dots"><span></span><span></span><span></span></div>
+        <span class="window-title">barleymark — source trust analysis</span>
+      </div>
+      <div class="demo-body">
+        <div class="demo-label">Source Trust Scores</div>
+        <div id="sourceRows"></div>
+        <div class="verdict-bar" id="verdictBar">
+          <span class="verdict-label-text">Overall Trust</span>
+          <span class="verdict-value">Proceed with caution on industry claims.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<section class="agents-section">
+  <div class="agents-inner reveal">
+    <div class="section-label">Agent Toolbox</div>
+    <div class="section-title">A growing team of<br>specialized research agents.</div>
+    <div class="section-desc">
+      Each agent handles a distinct part of the research pipeline. We're launching with two — and building more.
+    </div>
+
+    <div class="agents-grid">
+      <div class="agent-card teal-accent">
+        <div class="agent-icon teal-bg">🔍</div>
+        <h3>Deep Research</h3>
+        <p>Parallel web search, source deduplication, and a synthesized report with inline citations — all from a single question.</p>
+      </div>
+      <div class="agent-card purple-accent">
+        <div class="agent-icon purple-bg">⚖️</div>
+        <h3>Devil's Advocate</h3>
+        <p>Reads your research and builds the strongest possible counterargument. Each counter-point is rated for strength.</p>
+      </div>
+      <div class="agent-card coming-soon">
+        <div class="agent-icon">✦</div>
+        <h3>More Agents <span class="coming-tag">Coming</span></h3>
+        <p>We're designing additional agents to cover more of the research pipeline. Waitlist members get first access.</p>
+      </div>
+      <div class="agent-card coming-soon">
+        <div class="agent-icon">✦</div>
+        <h3>And More After That <span class="coming-tag">Coming</span></h3>
+        <p>The toolbox is modular by design. Activate only what you need, when you need it.</p>
+      </div>
+    </div>
+
+    <div class="more-agents-note">The full agent roster will be revealed at launch.</div>
+  </div>
+</section>
+
+<div class="glow-divider"></div>
+
+<section class="name-section reveal">
+  <div class="full-product-name"><span class="gradient-text">BarleyMark</span> Research Companion</div>
+  <p class="name-tagline">Named after a dog who never stops digging. Built for researchers who feel the same way.</p>
+</section>
+
+<div class="glow-divider"></div>
+
+<section class="bottom-cta">
+  <h2>Know what you know —<br>and what you don't.</h2>
+  <p>Be first to try BarleyMark Research Companion when we launch.</p>
+  <form class="bottom-email-form" onsubmit="handleSignup(event, this)">
+    <input type="email" placeholder="you@email.com" required autocomplete="email" />
+    <button type="submit">Join Waitlist</button>
+  </form>
+</section>
+
+<footer>
+  <div class="footer-left">
+    <div class="footer-mark"></div>
+    <span>BarleyMark Research Companion</span>
+  </div>
+  <div class="footer-right">&copy; 2026</div>
+</footer>
+
+<script>
+  const sources = [
+    { name: 'Nature Climate Change — Peer-Reviewed Study', domain: 'nature.com/nclimate', score: 92, tier: 'high' },
+    { name: 'Reuters — Investigative Report', domain: 'reuters.com', score: 87, tier: 'high' },
+    { name: 'Industry Blog — Sponsored Analysis', domain: 'techinsights.blog', score: 41, tier: 'med' },
+    { name: 'Anonymous Forum Post — Unverified', domain: 'discuss.anon.io', score: 12, tier: 'low' },
+  ];
+
+  function buildSourceRows() {
+    document.getElementById('sourceRows').innerHTML = sources.map((s, i) => `
+      <div class="source-row" data-index="${i}">
+        <div>
+          <div class="source-name">${s.name}</div>
+          <div class="source-domain">${s.domain}</div>
+        </div>
+        <div class="trust-score trust-${s.tier}">
+          <span class="score-num" data-target="${s.score}">0</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function animateDemo() {
+    const rows = document.querySelectorAll('.source-row');
+    rows.forEach((row, i) => {
+      setTimeout(() => {
+        row.classList.add('visible');
+        const scoreEl = row.querySelector('.score-num');
+        animateCount(scoreEl, parseInt(scoreEl.dataset.target), 600);
+      }, 300 + i * 280);
+    });
+    setTimeout(() => document.getElementById('verdictBar').classList.add('visible'), 300 + sources.length * 280 + 400);
+  }
+
+  function animateCount(el, target, duration) {
+    const start = performance.now();
+    el.classList.add('score-counting');
+    function tick(now) {
+      const p = Math.min((now - start) / duration, 1);
+      el.textContent = Math.round((1 - Math.pow(1 - p, 3)) * target);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.classList.remove('score-counting');
+    }
+    requestAnimationFrame(tick);
+  }
+
+  buildSourceRows();
+
+  const demoObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { animateDemo(); demoObs.disconnect(); } });
+  }, { threshold: 0.3 });
+  demoObs.observe(document.querySelector('.demo-card'));
+
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  function handleSignup(e, form) {
+    e.preventDefault();
+    const input = form.querySelector('input'), btn = form.querySelector('button');
+    form.classList.add('success');
+    btn.textContent = "You're in!";
+    input.value = ''; input.placeholder = "Thanks! We'll be in touch.";
+    input.disabled = true; btn.disabled = true;
+    setTimeout(() => {
+      form.classList.remove('success');
+      btn.textContent = form.classList.contains('bottom-email-form') ? 'Join Waitlist' : 'Get Early Access';
+      input.placeholder = 'you@email.com'; input.disabled = false; btn.disabled = false;
+    }, 3000);
+  }
+</script>
+</body>
+</html>
